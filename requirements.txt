@@ -11,6 +11,7 @@ packaging==26.3
 pandas==3.0.5
 pillow==12.3.0
 py4j==0.10.9.9
+pyarrow==25.0.1
 pyparsing==3.3.2
 pyspark==4.2.0
 python-dateutil==2.9.0.post0
