@@ -1,8 +1,31 @@
 import streamlit as st
 import pandas as pd
+import random
 from xgboost import XGBClassifier
 
 st.set_page_config(page_title="Student Dropout Risk Predictor", layout="centered")
+
+GROUP_NUMBER = 8
+PRIORITY_MEMBER = "P S Aadhish (VML24AD092)"
+OTHER_MEMBERS = [
+    "Prajwal Pratheev (VML24AD091)",
+    "Nived Sunil (VML24AD086)",
+    "Navalrag V P (VML24AD084)",
+    "Sanha Sadik (VML24AD099)",
+    "Muzeen K (VML24AD083)",
+]
+
+if "member_order" not in st.session_state:
+    shuffled = OTHER_MEMBERS.copy()
+    random.shuffle(shuffled)
+    st.session_state.member_order = [PRIORITY_MEMBER] + shuffled
+
+with st.sidebar:
+    st.subheader(f"Group {GROUP_NUMBER}")
+    for name in st.session_state.member_order:
+        st.write(name)
+    st.divider()
+    st.markdown("[View source on GitHub](https://github.com/aadhi5h/dropout-prediction)")
 
 @st.cache_resource
 def load_model():
