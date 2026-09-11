@@ -114,3 +114,6 @@ python src/05_feature_importance.py
 python src/06_export_for_viz.py
 ```
 
+## Author
+
+P S Aadhish ([@aadhi5h](https://github.com/aadhi5h))
