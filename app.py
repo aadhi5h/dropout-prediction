@@ -22,7 +22,7 @@ if "member_order" not in st.session_state:
     st.session_state.member_order = [(PRIORITY_MEMBER, PRIORITY_ID)] + shuffled
 
 # ==============================================================================
-# THEME
+# THEME — light, ink-efficient, print-safe
 # ==============================================================================
 
 st.markdown("""
@@ -30,43 +30,36 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-    --bg: #070c14;
-    --panel: #0e151f;
-    --panel-border: #1c2733;
-    --text: #dce6f0;
-    --text-dim: #64758a;
-    --cyan: #35e0c2;
-    --amber: #ffb454;
-    --coral: #ff5c72;
+    --bg: #fafaf7;
+    --panel: #ffffff;
+    --panel-border: #d8dce2;
+    --text: #1a1f27;
+    --text-dim: #6b7280;
+    --cyan: #0f766e;
+    --amber: #b45309;
+    --coral: #b91c1c;
     --mono: 'JetBrains Mono', monospace;
     --display: 'Space Grotesk', sans-serif;
 }
 
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
 html, body, [class*="css"] { font-family: var(--display); color: var(--text); }
-.stApp { background: radial-gradient(circle at 15% 0%, #0b1420 0%, var(--bg) 45%); }
+.stApp { background: var(--bg); }
 
 #MainMenu, footer, header { visibility: hidden; }
 
-/* ---- boot header ---- */
+/* ---- header ---- */
 .console-header { margin: 0.5rem 0 0.25rem 0; }
 .console-header .kicker {
     font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
     color: var(--cyan); display: flex; align-items: center; gap: 0.5rem;
 }
-.console-header .kicker .dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--cyan);
-    animation: pulse 1.8s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+.console-header .kicker .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); }
 .console-header h1 {
     font-family: var(--display); font-weight: 700; font-size: 2.1rem;
     margin: 0.3rem 0 0 0; color: var(--text); line-height: 1.15;
 }
-.console-header h1 .cursor {
-    display: inline-block; width: 3px; height: 1.6rem; background: var(--cyan);
-    margin-left: 6px; vertical-align: -3px; animation: blink 1.1s step-end infinite;
-}
-@keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
 
 .stat-row { display: flex; gap: 0.5rem; margin: 1rem 0 1.5rem 0; flex-wrap: wrap; }
 .stat-chip {
@@ -74,7 +67,7 @@ html, body, [class*="css"] { font-family: var(--display); color: var(--text); }
     border: 1px solid var(--panel-border); background: var(--panel);
     padding: 0.3rem 0.6rem; border-radius: 4px;
 }
-.stat-chip b { color: var(--text); font-weight: 500; }
+.stat-chip b { color: var(--text); font-weight: 600; }
 
 /* ---- section labels ---- */
 .section-label {
@@ -83,17 +76,18 @@ html, body, [class*="css"] { font-family: var(--display); color: var(--text); }
     padding-bottom: 0.4rem; margin: 1.6rem 0 0.8rem 0;
 }
 
-/* ---- bordered panels (native st.container(border=True)) ---- */
+/* ---- bordered panels ---- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     background: var(--panel) !important;
     border: 1px solid var(--panel-border) !important;
     border-radius: 6px !important;
+    break-inside: avoid;
 }
 
 /* ---- sliders ---- */
 div[data-baseweb="slider"] div[role="slider"] {
     background-color: var(--cyan) !important;
-    box-shadow: 0 0 0 4px rgba(53, 224, 194, 0.15) !important;
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15) !important;
 }
 div[data-testid="stSlider"] label p { font-family: var(--mono); font-size: 0.82rem; color: var(--text-dim); }
 div[data-testid="stTickBar"] { display: none; }
@@ -101,11 +95,18 @@ div[data-testid="stTickBar"] { display: none; }
 /* ---- buttons ---- */
 .stButton button {
     font-family: var(--mono); font-weight: 500; letter-spacing: 0.04em;
-    background: var(--cyan); color: #06110d; border: none; border-radius: 4px;
+    background: var(--cyan); color: #ffffff; border: none; border-radius: 4px;
     padding: 0.6rem 1.2rem; transition: filter 0.15s ease;
 }
 .stButton button:hover { filter: brightness(1.1); }
 .stButton button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+.print-btn {
+    font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em;
+    background: var(--panel); color: var(--text); border: 1px solid var(--panel-border);
+    border-radius: 4px; padding: 0.5rem 1rem; cursor: pointer;
+}
+.print-btn:hover { border-color: var(--cyan); color: var(--cyan); }
 
 /* ---- sidebar / manifest ---- */
 section[data-testid="stSidebar"] { background: var(--panel); border-right: 1px solid var(--panel-border); }
@@ -140,12 +141,25 @@ section[data-testid="stSidebar"] { background: var(--panel); border-right: 1px s
 .log-line {
     font-family: var(--mono); font-size: 0.9rem; line-height: 1.6; flex: 1; min-width: 240px;
     border-left: 2px solid var(--line-color, var(--cyan)); padding-left: 0.9rem;
+    color: var(--text) !important;
 }
 .log-line .tag {
     font-size: 0.7rem; letter-spacing: 0.08em; color: var(--line-color, var(--cyan));
-    display: block; margin-bottom: 0.3rem;
+    display: block; margin-bottom: 0.3rem; font-weight: 600;
+}
+
+/* ---- print rules ---- */
+@media print {
+    section[data-testid="stSidebar"] { display: none; }
+    .stButton, .print-btn { display: none; }
+    div[data-testid="stSlider"] { break-inside: avoid; }
+    .risk-ring { border: 1px solid var(--panel-border); }
 }
 </style>
+
+<script>
+function printConsole() { window.print(); }
+</script>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
@@ -190,7 +204,7 @@ model = load_model()
 st.markdown("""
 <div class="console-header">
     <div class="kicker"><span class="dot"></span>SYSTEM ONLINE</div>
-    <h1>Dropout Risk Console<span class="cursor"></span></h1>
+    <h1>Dropout Risk Console</h1>
 </div>
 <div class="stat-row">
     <div class="stat-chip">DATASET <b>KDD Cup 2015</b></div>
@@ -201,6 +215,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("Enter a student's engagement stats from the current course to get a live dropout-risk read.")
+st.markdown(
+    '<button class="print-btn" onclick="window.print()">🖨️ Print this page</button>',
+    unsafe_allow_html=True,
+)
 
 # ==============================================================================
 # INPUT TELEMETRY
@@ -285,9 +303,9 @@ if predict:
     with st.container(border=True):
         st.markdown(f"""
         <div class="readout">
-            <div class="risk-ring" style="background: conic-gradient({color} {pct * 3.6}deg, #1b2330 0deg);">
+            <div class="risk-ring" style="background: conic-gradient({color} {pct * 3.6}deg, #eceef1 0deg);">
                 <div class="risk-ring-value">
-                    <div class="pct" style="color:{color}">{pct:.2f}%</div>
+                    <div class="pct" style="color:{color}">{pct}%</div>
                     <div class="lbl">DROPOUT PROBABILITY</div>
                 </div>
             </div>
