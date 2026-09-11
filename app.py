@@ -287,7 +287,7 @@ if predict:
         <div class="readout">
             <div class="risk-ring" style="background: conic-gradient({color} {pct * 3.6}deg, #1b2330 0deg);">
                 <div class="risk-ring-value">
-                    <div class="pct" style="color:{color}">{pct}%</div>
+                    <div class="pct" style="color:{color}">{pct:.2f}%</div>
                     <div class="lbl">DROPOUT PROBABILITY</div>
                 </div>
             </div>
